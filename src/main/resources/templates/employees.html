@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<!--html lang="en"-->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>HR application</title>
+</head>
+<body>
+Employees
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Név:</th>
+        <th>Pozíció:</th>
+        <th>Belépés:</th>
+        <th>Fizetés:</th>
+        <th>Törlés</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="employee : ${employees}">
+        <td th:text="${employee.id}">id</td>
+        <td><a th:href="@{/editEmployee/{id}(id=${employee.getId()})}" th:text="${employee.name}">nev</a></td>
+        <td th:text="${employee.position}">position</td>
+        <td th:text="${employee.entryDate}">belépés</td>
+        <td th:text="${employee.salary}">fizu</td>
+        <td>
+            <form th:action="@{/delete/{id}(id=${employee.id})}" th:method="post">
+                <button type="submit">Törlés</button>
+            </form>
+        </td>
+    </tbody>
+</table>
+<br/>
+<form method="post" th:action="@{/hr}" th:object="${newEmployee}">
+    <table>
+        <tr>
+            <td>Name:</td>
+            <td><input th:field="*{name}"></td>
+        </tr>
+        <tr>
+            <td>Position:</td>
+            <td><input th:field="*{position}"></td>
+        </tr>
+        <tr>
+            <td>Entry Date:</td>
+            <td><input th:field="*{entryDate}" type="datetime-local"></td>
+        </tr>
+        <tr>
+            <td>Salary:</td>
+            <td><input th:field="*{salary}"></td>
+        </tr>
+
+    </table>
+    <button type="submit">Add</button>
+</form>
+</body>
+</html>

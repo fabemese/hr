@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: hr
+  profiles:
+    active: nemsmart
+  thymeleaf:
+    cache: false
+  mvc:
+    format:
+      date-time: yyyy-MM-dd HH:mm:ss
+
+hr:
+  salary:
+    def:
+      percent: 5
+    smart:
+      limit:
+        10: 10
+        5: 5
+        2.5: 2
+        0: 0
