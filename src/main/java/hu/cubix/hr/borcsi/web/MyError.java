@@ -7,6 +7,12 @@ import java.util.List;
 public class MyError {
     private String message;
     private int errorCode;
+    private List<FieldError> fieldErrors;
+
+    public MyError(String message, int errorCode) {
+        this.message = message;
+        this.errorCode = errorCode;
+    }
 
     public List<FieldError> getFieldErrors() {
         return fieldErrors;
@@ -14,13 +20,6 @@ public class MyError {
 
     public void setFieldErrors(List<FieldError> fieldErrors) {
         this.fieldErrors = fieldErrors;
-    }
-
-    private List<FieldError> fieldErrors;
-
-    public MyError(String message, int errorCode) {
-        this.message = message;
-        this.errorCode = errorCode;
     }
 
     public String getMessage() {

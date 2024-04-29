@@ -2,6 +2,9 @@ package hu.cubix.hr.borcsi.web;
 
 import hu.cubix.hr.borcsi.dto.CompanyDto;
 import hu.cubix.hr.borcsi.dto.EmployeeDto;
+import hu.cubix.hr.borcsi.mapper.CompanyMapper;
+import hu.cubix.hr.borcsi.service.CompanyService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +15,11 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/companies")
 public class CompanyController {
+    @Autowired
+    CompanyService companyService;
+    @Autowired
+    CompanyMapper companyMapper;
+
     private List<EmployeeDto> employees1 = new ArrayList<>();
     private List<EmployeeDto> employees2 = new ArrayList<>();
     private Map<Long, CompanyDto> companies = new HashMap<>();
@@ -40,21 +48,13 @@ public class CompanyController {
 
     @GetMapping
     public List<CompanyDto> getAllCompanies(@RequestParam Optional<Boolean> full) {
-        if (full.orElse(false)) {
-            return new ArrayList<>(companies.values());
-        } else {
-            return companies.values().stream().map(c -> new CompanyDto(c.getId(), c.getRegistrationNumber(), c.getName(), c.getAddress(), null)).toList();
-        }
+        return companyMapper.companiesToDtos(companyService.findAll(full));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CompanyDto> findById(@PathVariable Long id, @RequestParam Optional<Boolean> full) {
-        if (!companies.containsKey(id)) return ResponseEntity.notFound().build();
-        if (full.orElse(false))
-            return ResponseEntity.ok(companies.get(id));
-        CompanyDto companyDto = companies.get(id);
-        companyDto = new CompanyDto(companyDto.getId(), companyDto.getRegistrationNumber(), companyDto.getName(), companyDto.getAddress(), companyDto.getEmployeeDtoList());
-        companyDto.setEmployeeDtoList(null);
+        CompanyDto companyDto = companyMapper.companyToDto(companyService.findById(id, full));
+        if (companyDto == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(companyDto);
     }
 

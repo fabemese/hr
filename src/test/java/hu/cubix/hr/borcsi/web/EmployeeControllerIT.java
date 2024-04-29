@@ -15,13 +15,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class EmployeeControllerIT {
+    private static final String BASE_URI = "/api/employees";
     @Autowired
     EmployeeController employeeController;
-
     @Autowired
     WebTestClient webTestClient;
-
-    private static final String BASE_URI = "/api/employees";
 
     @Test
     public void testCreateEmployee() {

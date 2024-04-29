@@ -1,8 +1,15 @@
 package hu.cubix.hr.borcsi.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
 import java.time.LocalDateTime;
 
+@Entity
 public class Employee {
+    @Id
+    @GeneratedValue
     Long id;
     String name;
     String position;
