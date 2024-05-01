@@ -1,8 +1,6 @@
 package hu.cubix.hr.borcsi.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
@@ -15,6 +13,11 @@ public class Employee {
     String position;
     Integer salary;
     LocalDateTime entryDate;
+
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "company_id")
+    Company company;
 
     public Employee() {
     }
@@ -67,12 +70,20 @@ public class Employee {
         this.entryDate = entryDate;
     }
 
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
     @Override
     public boolean equals(Object employee) {
         if (employee == this)
             return true;
         if (!(employee instanceof Employee))
             return false;
-        return this.id == ((Employee) employee).getId();
+        return this.id.equals(((Employee) employee).getId());
     }
 }

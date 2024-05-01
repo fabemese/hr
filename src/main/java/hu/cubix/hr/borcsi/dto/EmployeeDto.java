@@ -1,5 +1,6 @@
 package hu.cubix.hr.borcsi.dto;
 
+import hu.cubix.hr.borcsi.model.Company;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
@@ -18,6 +19,8 @@ public class EmployeeDto {
     @Past
     LocalDateTime entryDate;
 
+    Company company;
+
     public EmployeeDto() {
     }
 
@@ -27,6 +30,14 @@ public class EmployeeDto {
         this.position = position;
         this.salary = salary;
         this.entryDate = entryDate;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
     public Long getId() {

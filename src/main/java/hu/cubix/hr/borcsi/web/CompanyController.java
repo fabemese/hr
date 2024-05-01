@@ -3,6 +3,7 @@ package hu.cubix.hr.borcsi.web;
 import hu.cubix.hr.borcsi.dto.CompanyDto;
 import hu.cubix.hr.borcsi.dto.EmployeeDto;
 import hu.cubix.hr.borcsi.mapper.CompanyMapper;
+import hu.cubix.hr.borcsi.model.Company;
 import hu.cubix.hr.borcsi.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -48,14 +49,22 @@ public class CompanyController {
 
     @GetMapping
     public List<CompanyDto> getAllCompanies(@RequestParam Optional<Boolean> full) {
-        return companyMapper.companiesToDtos(companyService.findAll(full));
+        List<Company> companies = companyService.findAll();
+        if (full.orElse(false)) {
+            return companyMapper.companiesToDtos(companies);
+        } else return companyMapper.companiesToPureDtos(companies);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CompanyDto> findById(@PathVariable Long id, @RequestParam Optional<Boolean> full) {
-        CompanyDto companyDto = companyMapper.companyToDto(companyService.findById(id, full));
-        if (companyDto == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(companyDto);
+        try {
+            Company company = companyService.findById(id, full);
+            if (full.orElse(false)) {
+                return ResponseEntity.ok(companyMapper.companyToDto(company));
+            } else return ResponseEntity.ok(companyMapper.companyToPureDto(company));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping

@@ -1,9 +1,13 @@
 package hu.cubix.hr.borcsi.mapper;
 
 import hu.cubix.hr.borcsi.dto.CompanyDto;
+import hu.cubix.hr.borcsi.dto.EmployeeDto;
 import hu.cubix.hr.borcsi.model.Company;
+import hu.cubix.hr.borcsi.model.Employee;
+import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
@@ -16,10 +20,19 @@ public interface CompanyMapper {
     @Mapping(target = "employeeDtoList", source = "employeeList")
     CompanyDto companyToDto(Company company);
 
-    @Mapping(target = "employeeList", source = "employeeDtoList")
+    @Mapping(target = "employeeDtoList", ignore = true)
+    @Named("pure")
+    CompanyDto companyToPureDto(Company company);
+
+    @Mapping(target = "employeeDtoList", source = "employeeList")
     List<CompanyDto> companiesToDtos(List<Company> company);
+
+    @IterableMapping(qualifiedByName = "pure")
+    List<CompanyDto> companiesToPureDtos(List<Company> company);
 
     Company dtoToCompany(CompanyDto companyDto);
 
+    @Mapping(target = "company", ignore = true)
+    EmployeeDto employeeToDto(Employee employee);
 
 }

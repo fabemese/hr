@@ -13,6 +13,7 @@ public interface EmployeeMapper {
 
     EmployeeDto employeeToDto(Employee employee);
 
+    //@Mapping(target="company", ignore=true)
     List<EmployeeDto> employeesToDtos(List<Employee> employee);
 
     Employee dtoToEmployee(EmployeeDto employeeDto);
