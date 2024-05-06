@@ -30,10 +30,6 @@ public class EmployeeController {
         public List<EmployeeDto> getAllEmployees() {
             return employeeMapper.employeesToDtos(employeeService.findAll());
         }
-  /*      @GetMapping(params = "limit")
-        public List<EmployeeDto> getTopSalaries(@RequestParam Integer limit) {
-            return employees.values()).stream().filter(e -> e.getSalary() > limit).toList();
-        }
     */
     @GetMapping()
     public List<EmployeeDto> getTopSalaries(@RequestParam Optional<Integer> limit) {
@@ -62,6 +58,13 @@ public class EmployeeController {
                                                          @RequestParam LocalDateTime end) {
         return employeeMapper.employeesToDtos(employeeService.findEntryDateBetween(start, end));
     }
+
+    @GetMapping("/like")
+    public List<EmployeeDto> getEmployeesLikeEmployee(@RequestBody @Valid EmployeeDto employeeDto) {
+        return employeeMapper.employeesToDtos(
+                employeeService.getEmployeesLikeEmployee(employeeMapper.dtoToEmployee(employeeDto)));
+    }
+
 
     @PostMapping
     public ResponseEntity<List<EmployeeDto>> createEmployee(@RequestBody @Valid EmployeeDto employeeDto) {

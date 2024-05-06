@@ -2,8 +2,10 @@ package hu.cubix.hr.borcsi.service;
 
 
 import hu.cubix.hr.borcsi.model.Company;
+import hu.cubix.hr.borcsi.model.Employee;
 import hu.cubix.hr.borcsi.model.PositionsOfCompanyWithAvgSalary;
 import hu.cubix.hr.borcsi.repository.CompanyRepository;
+import hu.cubix.hr.borcsi.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,30 +19,26 @@ import java.util.Optional;
 @Service
 public class CompanyService {
 
-
     @Autowired
     CompanyRepository companyRepository;
 
+    @Autowired
+    EmployeeRepository employeeRepository;
+
+    public Company createCompany(Company company) {
+        return companyRepository.save(company);
+    }
+
+    public List<Company> findAllWithEmployees() {
+        return companyRepository.findAllWithEmployees();
+    }
+
     public List<Company> findAll() {
         return companyRepository.findAll();
-
-      /*  if (full.orElse(false)) {
-            return new ArrayList<>(companies.values());
-        } else {
-            return companies.values().stream().map(c -> new Company(c.getId(), c.getRegistrationNumber(), c.getName(), c.getAddress(), null)).toList();
-        }*/
     }
 
     public Company findById(Long id, Optional<Boolean> full) {
-
         return companyRepository.findById(id).orElseThrow(NoSuchElementException::new);
-       /* if (!companies.containsKey(id)) return null;
-        if (full.orElse(false))
-            return companies.get(id);
-        Company company = companies.get(id);
-        company = new Company(company.getId(), company.getRegistrationNumber(), company.getName(), company.getAddress(), company.getEmployeeList());
-        company.setEmployeeList(null);
-        return company;*/
     }
 
     public Page<Company> findHigherSalary(Integer limit) {
@@ -54,6 +52,35 @@ public class CompanyService {
 
     public List<PositionsOfCompanyWithAvgSalary> findPositionsOfCompanyWithAvgSalary(Long id) {
         return companyRepository.findAverageSalaryByPosition(id);
+    }
+
+    public Company addNewEmployee(Long id, Employee employee) {
+        Company company = companyRepository.findById(id).get();
+        company.addEmployee(employee);
+        employeeRepository.save(employee);
+        return company;
+    }
+
+    public Company deleteEmployee(long id, long employeeId) {
+        Company company = companyRepository.findById(id).get();
+        Employee employee = employeeRepository.findById(employeeId).get();
+        employee.setCompany(null);
+        company.getEmployeeList().remove(employee);
+        employeeRepository.save(employee);
+        return company;
+    }
+
+    public Company replaceEmployees(long id, List<Employee> employees) {
+        Company company = companyRepository.findById(id).get();
+        company.getEmployeeList().forEach(e -> e.setCompany(null));
+        company.getEmployeeList().clear();
+
+        employees.forEach(e -> {
+            company.addEmployee(e);
+            employeeRepository.save(e);
+        });
+
+        return company;
     }
 
 }

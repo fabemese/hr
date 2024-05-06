@@ -2,9 +2,13 @@ package hu.cubix.hr.borcsi.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
+@NamedEntityGraph(
+        name = "company_full",
+        attributeNodes = @NamedAttributeNode("employeeList"))
 @Entity
 public class Company {
     @Id
@@ -13,7 +17,7 @@ public class Company {
     private Integer registrationNumber;
     private String name;
     private String address;
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)//, fetch = FetchType.EAGER)
     private List<Employee> employeeList;
 
 
@@ -36,6 +40,12 @@ public class Company {
         this.companyType = companyType;
     }
 
+    public void addEmployee(Employee employee) {
+        if (this.employeeList == null)
+            this.employeeList = new ArrayList<>();
+        this.employeeList.add(employee);
+        employee.setCompany(this);
+    }
 
     public Integer getRegistrationNumber() {
         return registrationNumber;

@@ -63,4 +63,10 @@ abstract public class EmployeePureService implements EmployeeService {
     public List<Employee> findEntryDateBetween(LocalDateTime start, LocalDateTime end) {
         return employeeRepository.findByEntryDateBetween(start, end);
     }
+
+    public List<Employee> getEmployeesLikeEmployee(Employee employee) {
+        return null;
+    }
+
+
 }
