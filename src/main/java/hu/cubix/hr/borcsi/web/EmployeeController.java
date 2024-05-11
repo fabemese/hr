@@ -62,17 +62,17 @@ public class EmployeeController {
     @GetMapping("/like")
     public List<EmployeeDto> getEmployeesLikeEmployee(@RequestBody @Valid EmployeeDto employeeDto) {
         return employeeMapper.employeesToDtos(
-                employeeService.getEmployeesLikeEmployee(employeeMapper.dtoToEmployee(employeeDto)));
+                employeeService.findEmployeesByExample(employeeMapper.dtoToEmployee(employeeDto)));
     }
 
 
     @PostMapping
-    public ResponseEntity<List<EmployeeDto>> createEmployee(@RequestBody @Valid EmployeeDto employeeDto) {
-        List<Employee> employees = employeeService.save(employeeMapper.dtoToEmployee(employeeDto));
-        if (employees == null) {
+    public ResponseEntity<EmployeeDto> createEmployee(@RequestBody @Valid EmployeeDto employeeDto) {
+        Employee employee = employeeService.save(employeeMapper.dtoToEmployee(employeeDto));
+        if (employee == null) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(employeeMapper.employeesToDtos(employees));
+        return ResponseEntity.ok(employeeMapper.employeeToDto(employee));
     }
 
     @PostMapping("/{id}")

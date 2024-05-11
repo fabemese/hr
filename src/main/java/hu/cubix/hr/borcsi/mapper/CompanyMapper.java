@@ -33,7 +33,14 @@ public interface CompanyMapper {
     Company dtoToCompany(CompanyDto companyDto);
 
     @Mapping(target = "company", ignore = true)
+    @Mapping(target = "manager", source = "manager.id")
+    @Mapping(target = "holidayList", ignore = true)
     EmployeeDto employeeToDto(Employee employee);
 
+    @Mapping(target = "manager", ignore = true)
+    @Named("employee")
+    Employee dtoToEmployee(EmployeeDto employee);
+
+    @IterableMapping(qualifiedByName = "employee")
     List<Employee> dtosToEmployees(List<EmployeeDto> employees);
 }

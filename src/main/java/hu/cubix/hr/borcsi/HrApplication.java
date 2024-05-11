@@ -52,7 +52,7 @@ public class HrApplication implements CommandLineRunner {
 
         //companyService.findHigherSalary(100).stream().forEach(c -> System.out.println(c.getId()));
         Page<Company> page = companyService.findHigherSalary(100);
-        System.out.println("összes employee " + page.getTotalElements());
+        System.out.println("összes comany " + page.getTotalElements());
         System.out.println("összes oldal " + page.getTotalPages());
 
         companyService.findNumberOfEmployeeHigher(0).stream().forEach(c -> System.out.println(c.getId()));

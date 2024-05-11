@@ -20,8 +20,10 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
     /*   @Query("SELECT c FROM Company c LEFT JOIN FETCH c.employeeList WHERE c.id=?1")
         public List<Company> findAllFull(Long id);*/
     @Query("SELECT c FROM Company c  JOIN c.employeeList e WHERE e.salary>?1")
-    //List<Company> findSalaryHigher(int limit);
-    Page<Company> findSalaryHigher(int limit, Pageable pageable);
+    Page<Company> findSalaryHigherPageable(int limit, Pageable pageable);
+
+    @Query("SELECT c FROM Company c  JOIN c.employeeList e WHERE e.salary>?1")
+    List<Company> findSalaryHigher(int limit);
 
     //@Query("SELECT c FROM Company c  WHERE (SELECT COUNT(emp) FROM c.employeeList emp)>?1")
     @Query("SELECT c FROM Company c  INNER JOIN  c.employeeList GROUP BY c HAVING COUNT(*) > ?1")

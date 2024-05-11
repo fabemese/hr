@@ -3,6 +3,8 @@ package hu.cubix.hr.borcsi.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Employee {
@@ -14,10 +16,15 @@ public class Employee {
     Integer salary;
     LocalDateTime entryDate;
 
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_id")
     Company company;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    Employee manager;
+
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
+    List<Holiday> holidayList;
 
     public Employee() {
     }
@@ -28,6 +35,30 @@ public class Employee {
         this.position = position;
         this.salary = salary;
         this.entryDate = entryDate;
+    }
+
+    public void addHoliday(Holiday holiday) {
+        if (this.holidayList == null)
+            this.holidayList = new ArrayList<>();
+
+        this.holidayList.add(holiday);
+        holiday.setCreatedBy(this);
+    }
+
+    public Employee getManager() {
+        return manager;
+    }
+
+    public void setManager(Employee manager) {
+        this.manager = manager;
+    }
+
+    public List<Holiday> getHolidayList() {
+        return holidayList;
+    }
+
+    public void setHolidayList(List<Holiday> holidayList) {
+        this.holidayList = holidayList;
     }
 
     public Long getId() {

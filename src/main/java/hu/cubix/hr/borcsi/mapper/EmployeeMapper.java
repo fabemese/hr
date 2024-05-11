@@ -12,10 +12,13 @@ import java.util.List;
 public interface EmployeeMapper {
     EmployeeMapper INSTANCE = Mappers.getMapper(EmployeeMapper.class);
 
-    @Mapping(target = "company.employeeList", ignore = true)
+    @Mapping(target = "company.employeeDtoList", ignore = true)
+    @Mapping(target = "manager", source = "manager.id")
+    @Mapping(target = "holidayList", ignore = true)
     EmployeeDto employeeToDto(Employee employee);
 
     List<EmployeeDto> employeesToDtos(List<Employee> employee);
 
+    @Mapping(target = "manager", ignore = true)
     Employee dtoToEmployee(EmployeeDto employeeDto);
 }

@@ -2,8 +2,12 @@ package hu.cubix.hr.borcsi.service;
 
 import hu.cubix.hr.borcsi.model.Employee;
 import hu.cubix.hr.borcsi.repository.EmployeeRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,14 +28,15 @@ abstract public class EmployeePureService implements EmployeeService {
         return employeeRepository.findById(id);
     }
 
-    public List<Employee> save(Employee employee) {
-        if (employeeRepository.existsById(employee.getId())) {
+    @Transactional
+    public Employee save(Employee employee) {
+        if (employee.getId() != null && employeeRepository.existsById(employee.getId())) {
             return null;
         }
-        employeeRepository.save(employee);
-        return employeeRepository.findAll();
+        return employeeRepository.save(employee);
     }
 
+    @Transactional
     public Employee edit(Employee employee) {
         if (employeeRepository.existsById(employee.getId())) {
             return employeeRepository.save(employee);
@@ -39,7 +44,7 @@ abstract public class EmployeePureService implements EmployeeService {
         throw new NoSuchElementException();
     }
 
-
+    @Transactional
     public List<Employee> delete(Long id) {
         employeeRepository.deleteById(id);
         return employeeRepository.findAll();
@@ -64,9 +69,30 @@ abstract public class EmployeePureService implements EmployeeService {
         return employeeRepository.findByEntryDateBetween(start, end);
     }
 
-    public List<Employee> getEmployeesLikeEmployee(Employee employee) {
-        return null;
+
+    public List<Employee> findEmployeesByExample(Employee example) {
+        Long id = example.getId();
+        String name = example.getName();
+        String position = example.getPosition();
+        Integer salary = example.getSalary();
+        LocalDateTime entryDate = example.getEntryDate();
+
+        Specification<Employee> spec = Specification.where(null);
+        if (id > 0) {
+            spec = spec.and(EmployeeSpecifications.hasId(id));
+        }
+        if (StringUtils.hasText(name)) {
+            spec = spec.and(EmployeeSpecifications.hasName(name));
+        }
+        if (StringUtils.hasText(position)) {
+            spec = spec.and(EmployeeSpecifications.hasPosition(position));
+        }
+        if (salary != null && salary > 0) {
+            spec = spec.and(EmployeeSpecifications.hasSalary(salary));
+        }
+        if (entryDate != null)
+            spec = spec.and(EmployeeSpecifications.hasEntryDate(entryDate));
+
+        return employeeRepository.findAll(spec, Sort.by(("id")));
     }
-
-
 }

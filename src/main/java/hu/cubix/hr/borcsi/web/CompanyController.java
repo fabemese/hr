@@ -6,6 +6,7 @@ import hu.cubix.hr.borcsi.mapper.CompanyMapper;
 import hu.cubix.hr.borcsi.mapper.EmployeeMapper;
 import hu.cubix.hr.borcsi.model.Company;
 import hu.cubix.hr.borcsi.service.CompanyService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +49,7 @@ public class CompanyController {
     }
 
     @PostMapping
-    public ResponseEntity<List<CompanyDto>> createCompany(@RequestBody CompanyDto companyDto) {
+    public ResponseEntity<List<CompanyDto>> createCompany(@RequestBody @Valid CompanyDto companyDto) {
         /*if (companies.containsKey(companyDto.getId())) {
             return ResponseEntity.badRequest().build();
         }
